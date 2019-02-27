@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Basic Todo</title>
+            <link rel="stylesheet" href="todo.css"/>
+		</head>
+		<body>
+            <header>
+                <h1>TODO List</h1>
+                <div class="addTodo">
+                    <input class="textfield" placeholder="add todo"/><button onclick="addTodo()" class="submit">Add</button>
+                </div>
+                <nav class="filter">
+                    <button class="selected">all</button>
+                    <button>active</button>
+                    <button>completed</button>
+                </nav>
+            </header>
+            <main>
+                <ul class="todos">
+                    <label><input type="checkbox"/> <span class="title"> Todo1 </span></label>
+                    <label><input type="checkbox" /> <span class="title"> Todo2 </span> </label>
+                    <label><input type="checkbox" /> <span class="title"> Todo3 </span> </label>
+                    <label><input type="checkbox" /> <span class="title"> Todo4 </span> </label>
+                </ul>
+            </main>
+            <footer>
+                <span>4 items left</span>
+                <button class="submit">Clear Completed</button>
+            </footer>
+        </body>
+        <script type="text/javascript">
+            function clearInput(selector) {
+                document.querySelector(selector).value = '';
+            }
+            function getTodoText() {
+                return document.querySelector('.textfield').value;
+            }
+
+            function addTodo(ev) {
+                //todo set to first todo item
+                const todo = document.querySelector('.todo');
+
+                //newTodo is a clone of todo.
+                //Passing true means it refers to clone's children as well
+                const newTodo = todo.cloneNode(true);
+
+                //sets innerText of span with class "title" to value returned by above getTodoText function
+                newTodo.querySelector('.title').innerText = getTodoText();
+
+                //inserts new todo into todo's parent ul before reference todo
+                todo.parentElement.insertBefore(newTodo, todo);
+                clearInput('.textfield');
+                updateRemaining();
+            }
+
+            function filter(button) {
+                document.querySelector('.selected').classList.remove('selected');
+                button.classList.add('selected');
+
+                const filterName = button.innerText;
+                for(let todo of document.querySelectorAll('.todo')) {
+                    const checked = todo.querySelect('input').checked === true;
+                    if(filterName === 'all') {
+                        todo.hidden = false;
+                    } else if(filterName === 'active') {
+                        todo.hidden = checked;
+                    } else if(filterName === 'completed') {
+                        todo.hidden = !checked;
+                    }
+                }
+            }
+        </script>
+	</html>
